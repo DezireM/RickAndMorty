@@ -2,6 +2,8 @@ package com.example.aruuke_hw2_6m.ui.fragment.cartoon
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.aruuke_hw2_6m.R
@@ -11,39 +13,9 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class CartoonAdapter(private var cartoonList: List<Character>) :
-    RecyclerView.Adapter<CartoonAdapter.CartoonViewHolder>() {
-
-    fun updateData(newCartoonList: List<Character>) {
-        cartoonList = newCartoonList
-        notifyDataSetChanged()
-    }
-
-    inner class CartoonViewHolder(private val binding: ItemCartoonBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(cartoonCharacter: Character) {
-            binding.tvName.text = cartoonCharacter.name
-            binding.tvStatus.text = "${cartoonCharacter.status} - ${cartoonCharacter.species}"
-            binding.tvCurrentLocation.text = cartoonCharacter.location.name
-
-            val currentTime = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
-                .format(Date())
-            binding.tvCurrentTime.text = currentTime
-
-            Glide.with(binding.root.context)
-                .load(cartoonCharacter.image)
-                .placeholder(R.drawable.ic_launcher_background)
-                .into(binding.imageView)
-
-            val circleDrawable = when (cartoonCharacter.status) {
-                "Alive" -> R.drawable.circle_green
-                "Dead" -> R.drawable.circle_red
-                else -> R.drawable.circle_grey
-            }
-            binding.imgCircle.setImageResource(circleDrawable)
-        }
-    }
+class CartoonAdapter(
+    private val onClick: (Character) -> Unit
+) : ListAdapter<Character, CartoonAdapter.CartoonViewHolder>(diffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartoonViewHolder {
         val binding = ItemCartoonBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -51,8 +23,44 @@ class CartoonAdapter(private var cartoonList: List<Character>) :
     }
 
     override fun onBindViewHolder(holder: CartoonViewHolder, position: Int) {
-        holder.bind(cartoonList[position])
+        holder.bind(getItem(position))
     }
 
-    override fun getItemCount(): Int = cartoonList.size
+    inner class CartoonViewHolder(private val binding: ItemCartoonBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(character: Character) = with(binding) {
+            tvName.text = character.name
+            tvStatus.text = "${character.status} - ${character.species}"
+            tvCurrentLocation.text = character.location.name
+
+            val currentTime = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+                .format(Date())
+            tvCurrentTime.text = currentTime
+
+            Glide.with(root.context)
+                .load(character.image)
+                .placeholder(R.drawable.ic_launcher_background)
+                .into(imgCartoon)
+
+            val circleDrawable = when (character.status) {
+                "Alive" -> R.drawable.circle_green
+                "Dead" -> R.drawable.circle_red
+                else -> R.drawable.circle_grey
+            }
+            imgCircle.setImageResource(circleDrawable)
+
+            root.setOnClickListener {
+                onClick(character)
+            }
+        }
+    }
+}
+
+private val diffUtil = object : DiffUtil.ItemCallback<Character>() {
+    override fun areItemsTheSame(oldItem: Character, newItem: Character): Boolean =
+        oldItem.id == newItem.id
+
+    override fun areContentsTheSame(oldItem: Character, newItem: Character): Boolean =
+        oldItem == newItem
 }
