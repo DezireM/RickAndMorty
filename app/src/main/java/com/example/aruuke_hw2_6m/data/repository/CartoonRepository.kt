@@ -1,50 +1,49 @@
 package com.example.aruuke_hw2_6m.data.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.aruuke_hw2_6m.data.api.CartoonApiService
-import com.example.aruuke_hw2_6m.data.model.BaseResponse
 import com.example.aruuke_hw2_6m.data.model.Character
 import com.example.aruuke_hw2_6m.utils.Resource
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import retrofit2.HttpException
+import java.io.IOException
 import javax.inject.Inject
 
 class CartoonRepository @Inject constructor(
-    private val apiService: CartoonApiService) {
+    private val apiService: CartoonApiService
+) {
 
-    fun getAllCharacters(): LiveData<Resource<List<Character>>> {
-        val data = MutableLiveData<Resource<List<Character>>>()
-
-        data.postValue(Resource.Loading())
-
-        apiService.getAllCharacters().enqueue(object : Callback<BaseResponse> {
-            override fun onResponse(call: Call<BaseResponse>, response: Response<BaseResponse>) {
-                data.postValue(Resource.Success(response.body()!!.characters))
+    suspend fun getAllCharacters(): Resource<List<Character>> = withContext(Dispatchers.IO) {
+        try {
+            val response = apiService.getAllCharacters()
+            if (response.isSuccessful && response.body() != null) {
+                Resource.Success(response.body()!!.characters)
+            } else {
+                Resource.Error("Server Error")
             }
-
-            override fun onFailure(call: Call<BaseResponse>, t: Throwable) {
-                data.postValue(Resource.Error(t.message ?: "Unknown Error"))
-            }
-        })
-        return data
+        } catch (e: Exception) {
+            Resource.Error(handleException(e))
+        }
     }
 
-    fun getCharactersById(id: Int): LiveData<Resource<Character>> {
-        val data = MutableLiveData<Resource<Character>>()
-
-        data.postValue(Resource.Loading())
-
-        apiService.getCharacterById(id).enqueue(object : Callback<Character> {
-            override fun onResponse(call: Call<Character>, response: Response<Character>) {
-                data.postValue(Resource.Success(response.body()!!))
+    suspend fun getCharactersById(id: Int): Resource<Character> = withContext(Dispatchers.IO) {
+        try {
+            val response = apiService.getCharacterById(id)
+            if (response.isSuccessful && response.body() != null) {
+                Resource.Success(response.body()!!)
+            } else {
+                Resource.Error("Server Error")
             }
+        } catch (e: Exception) {
+            Resource.Error(handleException(e))
+        }
+    }
 
-            override fun onFailure(call: Call<Character>, t: Throwable) {
-                data.postValue(Resource.Error(t.message ?: "Unknown Error"))
-            }
-        })
-        return data
+    private fun handleException(e: Exception): String {
+        return when (e) {
+            is IOException -> e.localizedMessage ?: "Network Error"
+            is HttpException -> e.localizedMessage ?: "Server Error"
+            else -> e.localizedMessage ?: "Unknown message"
+        }
     }
 }

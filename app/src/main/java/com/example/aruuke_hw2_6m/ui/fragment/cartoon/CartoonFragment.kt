@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,9 +24,7 @@ class CartoonFragment : Fragment() {
         FragmentCartoonBinding.inflate(layoutInflater)
     }
 
-    private val viewModel by lazy {
-        ViewModelProvider(this)[CartoonViewModel::class.java]
-    }
+    private val viewModel: CartoonViewModel by viewModels()
 
     private val cartoonAdapter by lazy {
         CartoonAdapter {

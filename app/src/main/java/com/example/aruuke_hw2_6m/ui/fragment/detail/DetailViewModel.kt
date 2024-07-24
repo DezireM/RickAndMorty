@@ -3,10 +3,12 @@ package com.example.aruuke_hw2_6m.ui.fragment.detail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.aruuke_hw2_6m.data.model.Character
 import com.example.aruuke_hw2_6m.data.repository.CartoonRepository
 import com.example.aruuke_hw2_6m.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,8 +31,8 @@ class DetailViewModel @Inject constructor(
 
     private fun fetchCharacterDetails() {
         characterId?.let { id ->
-            repository.getCharactersById(id).observeForever { resource ->
-                when (resource) {
+            viewModelScope.launch {
+                when (val resource = repository.getCharactersById(id)) {
                     is Resource.Success -> _characterDetails.postValue(resource.data)
                     is Resource.Error -> _error.postValue(resource.message)
                     is Resource.Loading -> {}
