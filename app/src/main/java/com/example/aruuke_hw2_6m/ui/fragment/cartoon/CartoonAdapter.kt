@@ -33,10 +33,7 @@ class CartoonAdapter(
             tvName.text = character.name
             tvStatus.text = "${character.status} - ${character.species}"
             tvCurrentLocation.text = character.location.name
-
-            val currentTime = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
-                .format(Date())
-            tvCurrentTime.text = currentTime
+            tvCurrentCreated.text = character.created
 
             Glide.with(root.context)
                 .load(character.image)

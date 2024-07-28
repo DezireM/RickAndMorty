@@ -149,89 +149,16 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="16dp"
+                            android:layout_margin="18dp"
                             android:orientation="vertical">
 
-                            <androidx.cardview.widget.CardView
-                                android:id="@+id/cardView"
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/rv_seasons"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                app:cardBackgroundColor="@color/dark_grey2"
-                                app:cardCornerRadius="10dp">
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="10dp"
-                                    android:orientation="vertical">
-
-                                    <TextView
-                                        android:id="@+id/tv_season"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="Season 1"
-                                        android:textColor="@color/white"
-                                        android:textSize="18sp"
-                                        android:textStyle="bold" />
-
-                                    <TextView
-                                        android:id="@+id/tv_episode"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="Episode 1"
-                                        android:textColor="@color/white"
-                                        android:textSize="14sp" />
-
-                                    <LinearLayout
-                                        android:id="@+id/expandableContainer"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:orientation="vertical"
-                                        android:visibility="gone">
-
-                                        <TextView
-                                            android:id="@+id/tv_name2"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_marginTop="26dp"
-                                            android:text="Name:"
-                                            android:textColor="@color/grey"
-                                            android:textSize="14sp"
-                                            android:textStyle="bold"
-                                            android:visibility="gone" />
-
-                                        <TextView
-                                            android:id="@+id/tv_currentName2"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:textColor="@color/white"
-                                            android:textSize="14sp"
-                                            android:visibility="gone"
-                                            tools:text="Pilot" />
-
-                                        <TextView
-                                            android:id="@+id/tv_location2"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_marginTop="16dp"
-                                            android:text="Location:"
-                                            android:textColor="@color/grey"
-                                            android:textSize="14sp"
-                                            android:textStyle="bold"
-                                            android:visibility="gone" />
-
-                                        <TextView
-                                            android:id="@+id/tv_currentLocation2"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:textColor="@color/white"
-                                            android:textSize="14sp"
-                                            android:visibility="gone"
-                                            tools:text="New York" />
-                                    </LinearLayout>
-                                </LinearLayout>
-                            </androidx.cardview.widget.CardView>
+                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                tools:itemCount="3"
+                                tools:listitem="@layout/item_detail" />
                         </LinearLayout>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>

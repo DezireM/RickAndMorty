@@ -1,33 +1,31 @@
 package com.example.aruuke_hw2_6m.ui.fragment.detail
 
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.aruuke_hw2_6m.R
 import com.example.aruuke_hw2_6m.data.model.Character
 import com.example.aruuke_hw2_6m.databinding.FragmentDetailBinding
-import dagger.hilt.android.AndroidEntryPoint
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-@AndroidEntryPoint
 class DetailFragment : Fragment() {
 
     private val binding by lazy {
         FragmentDetailBinding.inflate(layoutInflater)
     }
 
-    private val viewModel by lazy {
-        ViewModelProvider(this)[DetailViewModel::class.java]
-    }
+    private val viewModel by viewModel<DetailViewModel>()
+
+    private lateinit var adapter: DetailAdapter
+    private var mList = ArrayList<Character>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,6 +43,8 @@ class DetailFragment : Fragment() {
         viewModel.characterDetails.observe(viewLifecycleOwner) { character ->
             character?.let {
                 bind(it)
+                addDataToList(it)
+                setupRecyclerView()
             }
         }
 
@@ -53,6 +53,16 @@ class DetailFragment : Fragment() {
                 showToast(it)
             }
         }
+    }
+
+    private fun addDataToList(character: Character) {
+        mList.add(character)
+    }
+
+    private fun setupRecyclerView() {
+        binding.rvSeasons.layoutManager = LinearLayoutManager(context)
+        adapter = DetailAdapter(mList)
+        binding.rvSeasons.adapter = adapter
     }
 
     private fun bind(character: Character) = with(binding) {

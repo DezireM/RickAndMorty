@@ -91,17 +91,17 @@
                     tools:text="Earth (Replacement Dimension)" />
 
                 <TextView
-                    android:id="@+id/tv_time"
+                    android:id="@+id/tv_created"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:text="@string/time_of_creation"
+                    android:text="@string/created"
                     android:textColor="@color/grey"
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/tv_currentTime"
+                    android:id="@+id/tv_currentCreated"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"

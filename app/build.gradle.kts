@@ -1,8 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    id("kotlin-kapt")
-    id("com.google.dagger.hilt.android")
     id("androidx.navigation.safeargs.kotlin")
 }
 
@@ -64,10 +62,6 @@ dependencies {
     //Logging interceptor
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.2")
 
-    //Dagger hilt
-    implementation("com.google.dagger:hilt-android:2.51.1")
-    kapt("com.google.dagger:hilt-android-compiler:2.51.1")
-
     //Glide
     implementation ("com.github.bumptech.glide:glide:4.16.0")
 
@@ -75,4 +69,13 @@ dependencies {
     val nav_version = "2.7.7"
     implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
     implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
+
+    //Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
+
+    //Lifecycle KTX
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.4")
+
+    //Koin
+    implementation("io.insert-koin:koin-android:3.5.6")
 }
