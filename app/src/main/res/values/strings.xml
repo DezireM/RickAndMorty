@@ -4,4 +4,5 @@
     <string name="last_known_location">Last known location:</string>
     <string name="time_of_creation">Time of creation:</string>
     <string name="gender">Gender:</string>
+    <string name="created">Created:</string>
 </resources>

@@ -7,9 +7,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.io.IOException
-import javax.inject.Inject
 
-class CartoonRepository @Inject constructor(
+class CartoonRepository(
     private val apiService: CartoonApiService
 ) {
 
