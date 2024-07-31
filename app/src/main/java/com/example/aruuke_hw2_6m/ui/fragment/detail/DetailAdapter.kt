@@ -6,12 +6,13 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.aruuke_hw2_6m.R
-import com.example.aruuke_hw2_6m.data.model.Character
+import com.example.aruuke_hw2_6m.data.network.model.Character
 
-class DetailAdapter(private var list: List<Character>) :
-    RecyclerView.Adapter<DetailAdapter.DetailViewHolder>() {
+class DetailAdapter : ListAdapter<Character, DetailAdapter.DetailViewHolder>(CharacterDiffCallback()) {
 
     inner class DetailViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val name: TextView = itemView.findViewById(R.id.tv_currentName)
@@ -19,11 +20,19 @@ class DetailAdapter(private var list: List<Character>) :
         val linearLayout: LinearLayout = itemView.findViewById(R.id.expandableContainer)
         val cardView: CardView = itemView.findViewById(R.id.cardView)
 
-        fun expandOrCollapse() {
-            val isExpanded = list[adapterPosition].isExpandable
+        fun bind(character: Character) {
+            name.text = character.name
+            location.text = character.location.name
+
+            val isExpanded = character.isExpandable
             name.visibility = if (isExpanded) View.VISIBLE else View.GONE
             location.visibility = if (isExpanded) View.VISIBLE else View.GONE
             linearLayout.visibility = if (isExpanded) View.VISIBLE else View.GONE
+
+            cardView.setOnClickListener {
+                character.isExpandable = !character.isExpandable
+                notifyItemChanged(adapterPosition)
+            }
         }
     }
 
@@ -33,19 +42,17 @@ class DetailAdapter(private var list: List<Character>) :
     }
 
     override fun onBindViewHolder(holder: DetailViewHolder, position: Int) {
-        val character = list[position]
-        holder.name.text = character.name
-        holder.location.text = character.location.name
-
-        holder.expandOrCollapse()
-
-        holder.cardView.setOnClickListener {
-            character.isExpandable = !character.isExpandable
-            notifyItemChanged(position)
-        }
+        val character = getItem(position)
+        holder.bind(character)
     }
 
-    override fun getItemCount(): Int {
-        return list.size
+    class CharacterDiffCallback : DiffUtil.ItemCallback<Character>() {
+        override fun areItemsTheSame(oldItem: Character, newItem: Character): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: Character, newItem: Character): Boolean {
+            return oldItem == newItem
+        }
     }
 }

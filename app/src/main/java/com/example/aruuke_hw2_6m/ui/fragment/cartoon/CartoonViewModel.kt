@@ -4,12 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.aruuke_hw2_6m.data.model.Character
-import com.example.aruuke_hw2_6m.data.repository.CartoonRepository
+import com.example.aruuke_hw2_6m.data.network.model.Character
+import com.example.aruuke_hw2_6m.data.repositories.repository.CartoonRepository
 import com.example.aruuke_hw2_6m.utils.Resource
 import kotlinx.coroutines.launch
 
-class CartoonViewModel (
+class CartoonViewModel(
     private val repository: CartoonRepository
 ) : ViewModel() {
 
@@ -22,8 +22,9 @@ class CartoonViewModel (
 
     private fun fetchCharacters() {
         viewModelScope.launch {
-            val result = repository.getAllCharacters()
-            _characters.postValue(result)
+            repository.getAllCharacters().observeForever {
+                _characters.postValue(it)
+            }
         }
     }
 }

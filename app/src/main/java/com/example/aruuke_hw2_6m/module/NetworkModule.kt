@@ -1,6 +1,6 @@
 package com.example.aruuke_hw2_6m.module
 
-import com.example.aruuke_hw2_6m.data.api.CartoonApiService
+import com.example.aruuke_hw2_6m.data.network.api.CartoonApiService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module

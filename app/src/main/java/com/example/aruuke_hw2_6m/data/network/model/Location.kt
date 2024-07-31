@@ -1,9 +1,9 @@
-package com.example.aruuke_hw2_6m.data.model
+package com.example.aruuke_hw2_6m.data.network.model
 
 
 import com.google.gson.annotations.SerializedName
 
-data class Origin(
+data class Location(
     @SerializedName("name")
     val name: String,
     @SerializedName("url")

@@ -7,11 +7,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.aruuke_hw2_6m.R
-import com.example.aruuke_hw2_6m.data.model.Character
+import com.example.aruuke_hw2_6m.data.network.model.Character
 import com.example.aruuke_hw2_6m.databinding.ItemCartoonBinding
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 class CartoonAdapter(
     private val onClick: (Character) -> Unit
@@ -37,7 +34,6 @@ class CartoonAdapter(
 
             Glide.with(root.context)
                 .load(character.image)
-                .placeholder(R.drawable.ic_launcher_background)
                 .into(imgCartoon)
 
             val circleDrawable = when (character.status) {
