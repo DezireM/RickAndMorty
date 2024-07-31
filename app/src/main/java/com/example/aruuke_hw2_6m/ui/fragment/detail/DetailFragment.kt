@@ -1,67 +1,52 @@
 package com.example.aruuke_hw2_6m.ui.fragment.detail
 
-import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.aruuke_hw2_6m.R
-import com.example.aruuke_hw2_6m.data.model.Character
+import com.example.aruuke_hw2_6m.data.base.fragment.BaseFragment
+import com.example.aruuke_hw2_6m.data.network.model.Character
 import com.example.aruuke_hw2_6m.databinding.FragmentDetailBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class DetailFragment : Fragment() {
-
-    private val binding by lazy {
-        FragmentDetailBinding.inflate(layoutInflater)
-    }
+class DetailFragment : BaseFragment<FragmentDetailBinding>() {
 
     private val viewModel by viewModel<DetailViewModel>()
 
     private lateinit var adapter: DetailAdapter
-    private var mList = ArrayList<Character>()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return binding.root
+    override fun getViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentDetailBinding {
+        return FragmentDetailBinding.inflate(inflater, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun setupRecycler() {
+        setupRecyclerView()
 
-        val characterId = arguments?.getInt("characterId") ?: return
-        viewModel.setCharacterId(characterId)
-
-        viewModel.characterDetails.observe(viewLifecycleOwner) { character ->
-            character?.let {
-                bind(it)
-                addDataToList(it)
-                setupRecyclerView()
-            }
-        }
-
-        viewModel.error.observe(viewLifecycleOwner) { errorMessage ->
-            errorMessage?.let {
-                showToast(it)
-            }
-        }
+        val characterId = arguments?.getInt("characterId") ?: 0
+        viewModel.fetchCharacterDetails(characterId)
     }
 
-    private fun addDataToList(character: Character) {
-        mList.add(character)
+    override fun setupObservers() {
+        viewModel.characterDetails.observe(viewLifecycleOwner) { resource ->
+            resourceHandler(resource) { data ->
+                data?.let {
+                    bind(it)
+                    adapter.submitList(listOf(it))
+                }
+            }
+        }
     }
 
     private fun setupRecyclerView() {
         binding.rvSeasons.layoutManager = LinearLayoutManager(context)
-        adapter = DetailAdapter(mList)
+        adapter = DetailAdapter()
         binding.rvSeasons.adapter = adapter
     }
 
@@ -77,7 +62,6 @@ class DetailFragment : Fragment() {
 
         Glide.with(root.context)
             .load(character.image)
-            .placeholder(R.drawable.ic_launcher_background)
             .into(binding.imgDetail)
 
         val circleDrawable = when (character.status) {
@@ -86,9 +70,5 @@ class DetailFragment : Fragment() {
             else -> R.drawable.circle_grey
         }
         imgCircle.setImageResource(circleDrawable)
-    }
-
-    private fun showToast(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 }
